@@ -14,6 +14,7 @@ class Article:
     embedding: np.ndarray = None
     vector_store_index: int = None
     duplication_id: str = None
+    score: float = None
     
     def __repr__(self) -> str:
         return f"Article<{self.id}>"

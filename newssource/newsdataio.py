@@ -53,7 +53,8 @@ class NewsDataIO(AbstractNewsSource):
         client = self.get_api_client()
         response = client.latest_api(
             size=max_n,
-            language="en"  # TODO: Handle multilingual later
+            language="en",  # TODO: Handle multilingual later
+            prioritydomain="top"
         )
         
         if response["status"] != "success":
