@@ -9,7 +9,7 @@ STORED_ARTICLES_FILE_NAME = "articles.csv"
 THREADS_FILE_NAME = "threads.csv"
 
 # Similarity threshold to classify two documents as same
-SIMILARITY_THRESHOLD = 0.7
+SIMILARITY_THRESHOLD = 0.9
 
 # Maximum latest articles to fetch from a news source.
 MAXIMUM_LATEST_ARTICLES = 10

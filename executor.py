@@ -13,7 +13,12 @@ from threadgenerator.gemini import GeminiThreadGenerator
 
 # Load data and delete it from disk for next cycle
 print("Loading stored articles.")
-stored_articles = pd.read_csv(STORED_ARTICLES_FILE_NAME)
+try:
+    stored_articles = pd.read_csv(STORED_ARTICLES_FILE_NAME)
+except:
+    print("Failed to load stored articles. Aborting.")
+    exit()
+
 print("Deleting state files for next cycle.")
 remove(STORED_ARTICLES_FILE_NAME)
 remove(STATE_FILE_NAME)
@@ -25,7 +30,7 @@ merged_articles = [
         total_content="---".join(row["content"]),
         sources=row["link"],
     ) for _, row in stored_articles.groupby(by="duplication_id").agg(func=list).iterrows()
-][:2]
+]
 print(f"Generated {len(merged_articles)} merged articles.")
 
 # Score the marged articles
@@ -49,9 +54,6 @@ print(f"Generating threads for best {len(merged_articles)} articles.")
 thread_generator = GeminiThreadGenerator()
 thread_generator.generate_threads(merged_articles)
 
-# Append sources
-for article in merged_articles:
-    article.thread.append("Sources:" + "\n".join(f'[{_}]' for _ in article.sources))
 
 # Clean articles that failed to generate
 merged_articles = [
@@ -60,6 +62,10 @@ merged_articles = [
 print(f"Final {len(merged_articles)} threads generated.")
 if not merged_articles:
     exit()
+
+# Append sources
+for article in merged_articles:
+    article.thread.append("Sources:" + "\n".join(f'[{_}]' for _ in article.sources))
 
 try:
     stored_threads = pd.read_csv(THREADS_FILE_NAME)

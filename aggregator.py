@@ -68,6 +68,8 @@ print("Assigning duplication_ids.")
 # Search for semantic duplicates in the vector store for each latest article
 for article in latest_articles:
     resp = vector_store.get_similar_vectors(article.embedding)
+    
+    flag = False
     for vector_idx, sim in resp:
         if sim > SIMILARITY_THRESHOLD:
             similar_article_id = vector_idx_to_article_id[vector_idx]
@@ -75,17 +77,21 @@ for article in latest_articles:
             article_id_to_duplication_id[article.id] = article.duplication_id
             
             # Add article to vector store
-            article.vector_store_index = vector_store.add_vectors([article.embedding])[0]
+            article.vector_store_index = int(vector_store.add_vectors([article.embedding])[0])
             vector_idx_to_article_id[article.vector_store_index] = article.id
             
+            flag = True
             break
+    
+    if flag:
+        continue
     
     # No similar article found
     article.duplication_id = uuid4()
     article_id_to_duplication_id[article.id] = article.duplication_id
     
     # Add article to vector store
-    article.vector_store_index = vector_store.add_vectors([article.embedding])[0]
+    article.vector_store_index = int(vector_store.add_vectors([article.embedding])[0])
     vector_idx_to_article_id[article.vector_store_index] = article.id
 
 # Save vector store to disk

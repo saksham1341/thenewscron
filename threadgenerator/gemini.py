@@ -15,6 +15,8 @@ class GeminiThreadGenerator(AbstractThreadGenerator):
 You are a skilled thread writer for X (Twitter). 
 Convert the following article into an engaging X thread. 
 Break the content into clear tweets (max 280 chars each). 
+Do not include tweet indexing like '1/n' etc. 
+Add high reach hashtags in a clean manner.
 Return as JSON list: {"title": <string>, "thread": ["tweet1", "tweet2", ...]}.
 
 Article:

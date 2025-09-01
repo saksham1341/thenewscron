@@ -21,7 +21,8 @@ def stored_articles_page_generator():
             for idx, article_id in enumerate(row["id"]):
                 st.markdown(f"#### {row['title'][idx]}")
                 st.markdown(row["content"][idx])
-                st.divider()
+                if article_id != row["id"][-1]:
+                    st.divider()
 
 def threads_page_generator():
     st.title("Threads")
@@ -37,6 +38,8 @@ def threads_page_generator():
         with st.expander(row['title']):
             for x in row["thread"]:
                 st.text(x)
+                if x != row["thread"][-1]:
+                    st.divider()
 
 StoredArticlesPage = st.Page(stored_articles_page_generator, title="Stored Articles")
 ThreadsPage = st.Page(threads_page_generator, title="Threads")
