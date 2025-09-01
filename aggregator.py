@@ -23,9 +23,9 @@ except:
 print("Fetching latest articles.")
 news_source = NewsDataIO(state)
 latest_articles = asyncio.run(news_source.get_latest_articles())
+print(f"Fetched {len(latest_articles)} articles.")
 if not latest_articles:
     exit()
-print(f"Fetched {len(latest_articles)} articles.")
 
 # TODO:
 # 1. Assign clusters to latest articles based on the articles already in vector store

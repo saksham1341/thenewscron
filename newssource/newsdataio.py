@@ -41,9 +41,9 @@ class NewsDataIO(AbstractNewsSource):
         """
         
         async with httpx.AsyncClient() as client:
-            resp = await client.get(url=url)
+            resp = await client.get(url=url, follow_redirects=True)
             
-            return trafilatura.extract(resp.text)
+            return trafilatura.extract(resp.text, with_metadata=True)
     
     async def get_latest_articles(self, max_n = MAXIMUM_LATEST_ARTICLES) -> List[Article]:
         """

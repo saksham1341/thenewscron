@@ -38,8 +38,8 @@ Article:
             result = result[:-3] if result.endswith("```") else result
 
             parsed = json.loads(result)
-            article.title = parsed.get("title", "")
-            article.thread = parsed.get("thread", "")
+            article.title = parsed.get("title", None)
+            article.thread = parsed.get("thread", None)
         except Exception as e:
             article.title = None
             article.thread = None

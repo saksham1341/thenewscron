@@ -6,6 +6,7 @@ from os import getenv
 
 STATE_FILE_NAME = "state.json"
 STORED_ARTICLES_FILE_NAME = "articles.csv"
+THREADS_FILE_NAME = "threads.csv"
 
 # Similarity threshold to classify two documents as same
 SIMILARITY_THRESHOLD = 0.7

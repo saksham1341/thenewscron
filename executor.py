@@ -4,7 +4,9 @@ Main executor script.
 
 from article.merged import MergedArticle
 from articlescorer.gemini import GeminiArticleScorer
-from config import STATE_FILE_NAME, STORED_ARTICLES_FILE_NAME, FAISS_STORE_FILE_NAME, GEMINI_API_KEY, MAXIMUM_THREAD_COUNT
+from config import STATE_FILE_NAME, STORED_ARTICLES_FILE_NAME, THREADS_FILE_NAME, FAISS_STORE_FILE_NAME, GEMINI_API_KEY, MAXIMUM_THREAD_COUNT
+from dataclasses import asdict
+import json
 from os import remove
 import pandas as pd
 from threadgenerator.gemini import GeminiThreadGenerator
@@ -20,9 +22,10 @@ remove(FAISS_STORE_FILE_NAME)
 # Generate merged articles
 merged_articles = [
     MergedArticle(
-        total_content="---".join(row["content"])
+        total_content="---".join(row["content"]),
+        sources=row["link"],
     ) for _, row in stored_articles.groupby(by="duplication_id").agg(func=list).iterrows()
-]
+][:2]
 print(f"Generated {len(merged_articles)} merged articles.")
 
 # Score the marged articles
@@ -46,19 +49,32 @@ print(f"Generating threads for best {len(merged_articles)} articles.")
 thread_generator = GeminiThreadGenerator()
 thread_generator.generate_threads(merged_articles)
 
+# Append sources
+for article in merged_articles:
+    article.thread.append("Sources:" + "\n".join(f'[{_}]' for _ in article.sources))
+
 # Clean articles that failed to generate
 merged_articles = [
     article for article in merged_articles if article.title is not None and article.thread is not None
 ]
 print(f"Final {len(merged_articles)} threads generated.")
+if not merged_articles:
+    exit()
 
-for a in merged_articles:
-    print("=" * 50)
-    print(a.title)
-    print("-" * 50)
-    for x in a.thread:
-        print(x)
-    print()
-    print()
+try:
+    stored_threads = pd.read_csv(THREADS_FILE_NAME)
+    stored_threads["thread"] = stored_threads["thread"].map(json.loads)
+except:
+    stored_threads = pd.DataFrame(columns=asdict(merged_articles[0]).keys())
+
+new_threads_df = pd.DataFrame([asdict(article) for article in merged_articles])
+updated_threads = pd.concat(
+    [stored_threads, new_threads_df],
+    ignore_index=True
+)
+updated_threads["thread"] = updated_threads["thread"].map(json.dumps)
+
+updated_threads.to_csv(THREADS_FILE_NAME)
+print("Saved.")
 
 # TODO: Publish threads to X
