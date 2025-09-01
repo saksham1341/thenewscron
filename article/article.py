@@ -10,8 +10,9 @@ class Article:
     id: str = None
     title: str = None
     link: str = None
-    conetnt: str = None
+    content: str = None
     embedding: np.ndarray = None
+    vector_store_index: int = None
     
     def __repr__(self) -> str:
         return f"Article<{self.id}>"
