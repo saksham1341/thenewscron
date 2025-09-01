@@ -30,3 +30,6 @@ VECTOR_SIMILAR_SEARCH_N = 1
 
 # FAISS Specific config
 FAISS_STORE_FILE_NAME="faiss_store"
+
+# Final maximum thread count
+MAXIMUM_THREAD_COUNT = 2
