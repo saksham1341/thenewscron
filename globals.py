@@ -1,0 +1,4 @@
+"""
+Collection of global variables.
+"""
+
