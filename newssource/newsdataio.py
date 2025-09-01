@@ -68,7 +68,7 @@ class NewsDataIO(AbstractNewsSource):
                 title=_["title"],
                 link=_["link"],
                 content=contents[idx],
-            ) for idx, _ in enumerate(results) if not isinstance(contents[idx], BaseException)
+            ) for idx, _ in enumerate(results) if (not isinstance(contents[idx], BaseException)) and contents[idx] is not None 
         ]
 
 if __name__ == "__main__":
