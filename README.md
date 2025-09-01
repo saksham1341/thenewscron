@@ -1,0 +1,3 @@
+# Placeholder
+
+News aggregator bot.
