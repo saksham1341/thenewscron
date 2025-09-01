@@ -13,6 +13,7 @@ class Article:
     content: str = None
     embedding: np.ndarray = None
     vector_store_index: int = None
+    duplication_id: str = None
     
     def __repr__(self) -> str:
         return f"Article<{self.id}>"

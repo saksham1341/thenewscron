@@ -4,6 +4,12 @@ Configuration file.
 
 from os import getenv
 
+STATE_FILE_NAME = "state.json"
+STORED_ARTICLES_FILE_NAME = "articles.csv"
+
+# Similarity threshold to classify two documents as same
+SIMILARITY_THRESHOLD = 0.7
+
 # Maximum latest articles to fetch from a news source.
 MAXIMUM_LATEST_ARTICLES = 10
 
@@ -20,4 +26,7 @@ GEMINI_DIMENSION = 3072
 
 # Vector Store Config
 VECTOR_STORE_DIMENSION = GEMINI_DIMENSION
-VECTOR_NEAREST_SEARCH_N = 1
+VECTOR_SIMILAR_SEARCH_N = 1
+
+# FAISS Specific config
+FAISS_STORE_FILE_NAME="faiss_store"

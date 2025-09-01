@@ -2,7 +2,7 @@
 Abstract Vector Store.
 """
 
-from config import VECTOR_NEAREST_SEARCH_N
+from config import VECTOR_SIMILAR_SEARCH_N
 import numpy as np
 from typing import List, Tuple
 
@@ -34,9 +34,9 @@ class AbstractVectorStore:
         
         raise NotImplementedError()
     
-    def get_nearest_vectors(self, query_vector: np.ndarray, n: int = VECTOR_NEAREST_SEARCH_N) -> List[Tuple[int, float]]:
+    def get_similar_vectors(self, query_vector: np.ndarray, n: int = VECTOR_SIMILAR_SEARCH_N) -> List[Tuple[int, float]]:
         """
-        Search the vector store and return maximum of n sorted nearest vector [indexes] to the query vector along with their distance.
+        Search the vector store and return maximum of n sorted similar vector [indexes] to the query vector along with their cosine similarity.
         
         Args:
             query_vector (np.ndarray): Query vector.
