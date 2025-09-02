@@ -6,6 +6,7 @@ from config import STORED_ARTICLES_FILE_NAME, THREADS_FILE_NAME, X_API_KEY, X_AP
 import json
 import pandas as pd
 import streamlit as st
+from time import sleep
 import tweepy
 from uuid import uuid4
 
@@ -44,6 +45,9 @@ def publish_thread(thread):
                 text=post,
                 in_reply_to_tweet_id=prev.data["id"]
             )
+        
+        if post != thread[-1]:
+            sleep(.2)
 
 def threads_page_generator():
     st.title("Threads")

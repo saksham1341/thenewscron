@@ -12,11 +12,14 @@ class GeminiThreadGenerator(AbstractThreadGenerator):
     def __init__(self):
         self._client = genai.Client()
         self._thread_generation_prompt = """
-You are a skilled thread writer for X (Twitter). 
-Convert the following article into an engaging X thread. 
-Break the content into clear tweets (max 280 chars each). 
-Do not include tweet indexing like '1/n' etc. 
-Add high reach hashtags in a clean manner.
+You are an expert X (Twitter) thread writer skilled in maximizing reach and engagement. 
+Transform the following article into a compelling X thread. 
+Each tweet must be concise (≤280 characters). 
+Avoid numbering/indexing (no “1/n”). 
+Use a clear, engaging flow to keep readers hooked. 
+Include high-reach, relevant hashtags in a natural way—at least in the first tweet. 
+Make the thread feel conversational, insightful, and shareable. 
+
 Return as JSON list: {"title": <string>, "thread": ["tweet1", "tweet2", ...]}.
 
 Article:

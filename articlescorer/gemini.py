@@ -13,11 +13,26 @@ class GeminiArticleScorer(AbstractArticleScorer):
     def __init__(self) -> None:
         self._client = genai.Client()
         self._scoring_prompt = """
-You are an expert social media strategist. 
-Given the following article, which is basically multiple articles separated by `---`, rate its potential performance if converted into an X (Twitter) thread on a scale of 0 to 100. 
-Respond with JSON in the format: {"score": <float>}.
+You are an expert social media strategist specializing in high-impact X (Twitter) threads.
+I will provide you with multiple articles on the same event, separated by "---".
 
-Article:
+Your task:
+
+Analyze the overall event described across the articles.
+
+Evaluate its potential impact and engagement value if turned into an X thread.
+
+Consider factors such as relevance, timeliness, virality potential, emotional impact, controversy, uniqueness, and public interest.
+
+Output only a single numeric score between 1 and 100, where:
+
+1 = not worth writing about (low interest/impact)
+
+100 = extremely worth writing about (high viral potential)
+
+Do not provide explanations or text—only the numeric score.
+
+Here is the content to evaluate:
 %ARTICLE_BODY%
 """
         self._max_workers = 5
@@ -32,10 +47,8 @@ Article:
                 contents=self._scoring_prompt.replace("%ARTICLE_BODY%", article.total_content),
             )
             text = resp.text
-            text = text[7:] if text.startswith("```json") else text
-            text = text[:-3] if text.endswith("```") else text
 
-            article.score = json.loads(text)["score"]
+            article.score = float(text)
         except Exception:
             article.score = 0
 
