@@ -33,7 +33,7 @@ VECTOR_SIMILAR_SEARCH_N = 1
 FAISS_STORE_FILE_NAME="faiss_store"
 
 # Final maximum thread count
-MAXIMUM_THREAD_COUNT = 2
+MAXIMUM_THREAD_COUNT = 5
 
 # X API
 X_API_KEY = getenv("X_API_KEY", None)

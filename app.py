@@ -22,10 +22,13 @@ def stored_articles_page_generator():
     
     try:
         df = pd.read_csv(STORED_ARTICLES_FILE_NAME)
+        if len(df) == 0:
+            raise BaseException()
     except:
         st.info("Stored articles will be generated soon.")
         return
     
+    st.text(f"Total {len(df)} articles.")
     for _, row in df.groupby(by="duplication_id").agg(func=list).iterrows():
         with st.expander(f"Duplication ID: {row.name}"):
             for idx, article_id in enumerate(row["id"]):
@@ -49,13 +52,29 @@ def publish_thread(thread):
         if post != thread[-1]:
             sleep(.2)
 
+def generate_thread_delete_handler(idx):
+    def _():
+        try:
+            df = pd.read_csv(THREADS_FILE_NAME)
+            if len(df) == 0:
+                raise BaseException()
+        except:
+            return
+        
+        df = df.drop(index=idx, axis=1)
+        df.to_csv(THREADS_FILE_NAME, index=False)
+    
+    return _
+
 def threads_page_generator():
     st.title("Threads")
     
     try:
         df = pd.read_csv(THREADS_FILE_NAME)
+        if len(df) == 0:
+            raise BaseException()
         df["thread"] = df["thread"].map(json.loads)
-    except:
+    except BaseException as e:
         st.info("Threads will be generated soon.")
         return
     
@@ -70,6 +89,13 @@ def threads_page_generator():
                 label="Publish",
                 key=uuid4(),
                 on_click=lambda: publish_thread(row["thread"]),
+            )
+                
+            
+            st.button(
+                label="Delete",
+                key=uuid4(),
+                on_click=generate_thread_delete_handler(_), 
             )
 
 StoredArticlesPage = st.Page(stored_articles_page_generator, title="Stored Articles")
