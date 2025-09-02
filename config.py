@@ -34,3 +34,11 @@ FAISS_STORE_FILE_NAME="faiss_store"
 
 # Final maximum thread count
 MAXIMUM_THREAD_COUNT = 2
+
+# X API
+X_API_KEY = getenv("X_API_KEY", None)
+X_API_KEY_SECRET = getenv("X_API_KEY_SECRET", None)
+X_ACCESS_TOKEN = getenv("X_ACCESS_TOKEN", None)
+X_ACCESS_TOKEN_SECRET = getenv("X_ACCESS_TOKEN_SECRET", None)
+if None in [X_API_KEY, X_API_KEY_SECRET, X_ACCESS_TOKEN, X_ACCESS_TOKEN_SECRET]:
+    raise ValueError("X API Credentials not found in the environment.")
