@@ -12,6 +12,7 @@ It fetches fresh articles from external sources, evaluates their potential for e
 - **Thread Generation** → Converts long-form articles into concise, engaging X threads.
 - **Embeddings & Vector Store** → Uses FAISS for semantic storage & retrieval.
 - **Streamlit Dashboard** → Monitor and manage the pipeline with a simple UI.
+- **X API Integration** → Directly publish generated threads to X from the streamlit dashboard.
 - **Modular Design** → Independent modules for sources, scoring, embeddings, and storage.
 
 ---
@@ -135,7 +136,6 @@ Each module follows a `base.py` abstract structure for easy extensibility.
 
 - Multi-source aggregation (RSS, GDELT, custom scrapers)
 - Better scoring with fine-tuned models
-- X API integration for **direct posting**
 - Rich Streamlit dashboard (analytics, leaderboards)
 
 ---
