@@ -32,7 +32,7 @@ def stored_articles_page_generator():
     for _, row in df.groupby(by="duplication_id").agg(func=list).iterrows():
         with st.expander(f"Duplication ID: {row.name}"):
             for idx, article_id in enumerate(row["id"]):
-                st.markdown(row["content"][idx])
+                st.text(row["content"][idx].strip("-"))
                 if article_id != row["id"][-1]:
                     st.divider()
 
@@ -48,9 +48,6 @@ def publish_thread(thread):
                 text=post,
                 in_reply_to_tweet_id=prev.data["id"]
             )
-        
-        if post != thread[-1]:
-            sleep(.2)
 
 def generate_thread_delete_handler(idx):
     def _():
@@ -85,18 +82,21 @@ def threads_page_generator():
                 if x != row["thread"][-1]:
                     st.divider()
             
-            st.button(
-                label="Publish",
-                key=uuid4(),
-                on_click=lambda: publish_thread(row["thread"]),
-            )
-                
+            col1, col2 = st.columns(2)
             
-            st.button(
-                label="Delete",
-                key=uuid4(),
-                on_click=generate_thread_delete_handler(_), 
-            )
+            with col1:
+                st.button(
+                    label="Publish",
+                    key=uuid4(),
+                    on_click=lambda: publish_thread(row["thread"]),
+                )
+            
+            with col2:
+                st.button(
+                    label="Delete",
+                    key=uuid4(),
+                    on_click=generate_thread_delete_handler(_), 
+                )
 
 StoredArticlesPage = st.Page(stored_articles_page_generator, title="Stored Articles")
 ThreadsPage = st.Page(threads_page_generator, title="Threads")
