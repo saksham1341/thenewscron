@@ -20,9 +20,9 @@ if len(NEWSDATAIO_API_KEYS) == 1 and NEWSDATAIO_API_KEYS[0] == "":
     raise ValueError("NEWSDATAIO_API_KEYS not found in the environment.")
 
 # Gemini
-GEMINI_API_KEY = getenv("GEMINI_API_KEY", "")
-if GEMINI_API_KEY == "":
-    raise ValueError("GEMINI_API_KEY not found in environment.")
+GEMINI_API_KEYS = getenv("GEMINI_API_KEYS", "").split(",")
+if len(GEMINI_API_KEYS) == 1 and GEMINI_API_KEYS[0] == "":
+    raise ValueError("GEMINI_API_KEYS not found in the environment.")
 GEMINI_DIMENSION = 3072
 
 # Vector Store Config

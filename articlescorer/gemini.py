@@ -4,14 +4,17 @@ Gemini based article scorer.
 
 from .base import AbstractArticleScorer
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from config import GEMINI_API_KEY
+from config import GEMINI_API_KEYS
+from globals import THREADING_LOCK
 from google import genai
-import json
 from time import sleep
 
 class GeminiArticleScorer(AbstractArticleScorer):
-    def __init__(self) -> None:
-        self._client = genai.Client()
+    def __init__(self, state) -> None:
+        super().__init__(state)
+        self._clients = [
+            genai.Client(api_key=x) for x in GEMINI_API_KEYS
+        ]
         self._scoring_prompt = """
 You are an expert social media strategist specializing in high-impact X (Twitter) threads.
 I will provide you with multiple articles on the same event, separated by "---".
@@ -37,12 +40,19 @@ Here is the content to evaluate:
 """
         self._max_workers = 5
     
+    def _get_client(self):
+        with THREADING_LOCK:
+            self._state["gemini_current_client_idx"] = (self._state.get("gemini_current_client_idx", -1) + 1) % len(GEMINI_API_KEYS)
+            _ = self._state["gemini_current_client_idx"]
+        
+        return self._clients[_]
+    
     def _score_single_article(self, article):
         if article.score is not None:
             return article
 
         try:
-            resp = self._client.models.generate_content(
+            resp = self._get_client().models.generate_content(
                 model="gemini-2.5-flash",
                 contents=self._scoring_prompt.replace("%ARTICLE_BODY%", article.total_content),
             )
@@ -61,24 +71,3 @@ Here is the content to evaluate:
             for future in as_completed(futures):
                 results.append(future.result())
         return results
-    
-    # def score_articles(self, articles):
-    #     for article in articles:
-    #         if article.score is not None:
-    #             continue
-            
-    #         resp = self._client.models.generate_content(
-    #             model="gemini-2.5-flash",
-    #             contents=self._scoring_prompt.replace("%ARTICLE_BODY%", article.total_content)
-    #         )
-            
-    #         try:
-    #             resp = resp.text
-    #             resp = resp[7:] if resp.startswith("```json") else resp
-    #             resp = resp[:-3] if resp.endswith("```") else resp
-                
-    #             article.score = json.loads(resp)["score"]
-    #         except:
-    #             article.score = 0
-            
-    #         sleep(20.5)

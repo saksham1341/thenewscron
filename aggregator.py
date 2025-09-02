@@ -49,7 +49,7 @@ if not latest_articles:
 print("Generating embeddings.")
 # Generate embeddings of all articles
 article_contents = [article.content for article in latest_articles]
-embedder = GeminiEmbedder()
+embedder = GeminiEmbedder(state)
 embeddings = embedder.embed(article_contents)
 for idx, article in enumerate(latest_articles):
     article.embedding = embeddings[idx]

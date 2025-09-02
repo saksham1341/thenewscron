@@ -4,13 +4,17 @@ Gemini Thread Generator.
 
 from .base import AbstractThreadGenerator
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from config import GEMINI_API_KEY
+from config import GEMINI_API_KEYS
 import json
+from globals import THREADING_LOCK
 from google import genai
 
 class GeminiThreadGenerator(AbstractThreadGenerator):
-    def __init__(self):
-        self._client = genai.Client()
+    def __init__(self, state):
+        super().__init__(state)
+        self._clients = [
+            genai.Client(api_key=x) for x in GEMINI_API_KEYS
+        ]
         self._thread_generation_prompt = """
 You are an expert X (Twitter) thread writer skilled in maximizing reach and engagement. 
 Transform the following article into a compelling X thread. 
@@ -27,9 +31,16 @@ Article:
 """
         self._max_workers = 5
     
+    def _get_client(self):
+        with THREADING_LOCK:
+            self._state["gemini_current_client_idx"] = (self._state.get("gemini_current_client_idx", -1) + 1) % len(GEMINI_API_KEYS)
+            _ = self._state["gemini_current_client_idx"]
+        
+        return self._clients[_]
+    
     def _generate_single_thread(self, article):
         try:
-            resp = self._client.models.generate_content_stream(
+            resp = self._get_client().models.generate_content_stream(
                 model="gemini-2.5-pro",
                 contents=self._thread_generation_prompt.replace("%ARTICLE_TEXT%", article.total_content)
             )
