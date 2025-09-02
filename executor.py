@@ -88,7 +88,7 @@ updated_threads = pd.concat(
 )
 updated_threads["thread"] = updated_threads["thread"].map(json.dumps)
 
-updated_threads.to_csv(THREADS_FILE_NAME)
+updated_threads.to_csv(THREADS_FILE_NAME, index=False)
 
 # Save state
 with open(STATE_FILE_NAME, "w") as f:
