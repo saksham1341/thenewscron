@@ -63,6 +63,20 @@ def generate_thread_delete_handler(idx):
     
     return _
 
+def generate_thread_publish_handler(idx):
+    def _():
+        try:
+            df = pd.read_csv(THREADS_FILE_NAME)
+            if len(df) == 0:
+                raise BaseException()
+        except:
+            print("H")
+            return
+        
+        publish_thread(json.loads(df.at[idx, "thread"]))
+        
+    return _
+
 def threads_page_generator():
     st.title("Threads")
     
@@ -88,7 +102,7 @@ def threads_page_generator():
                 st.button(
                     label="Publish",
                     key=uuid4(),
-                    on_click=lambda: publish_thread(row["thread"]),
+                    on_click=generate_thread_publish_handler(_),
                 )
             
             with col2:

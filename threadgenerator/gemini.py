@@ -21,7 +21,7 @@ Transform the following article into a compelling X thread.
 Each tweet must be concise (≤280 characters). 
 Avoid numbering/indexing (no “1/n”). 
 Use a clear, engaging flow to keep readers hooked. 
-Include high-reach, relevant hashtags in a natural way—at least in the first tweet. 
+This is important: Include maximal high-reach, relevant hashtags in a natural way everywhere possible.  
 Make the thread feel conversational, insightful, and shareable. 
 
 Return as JSON list: {"title": <string>, "thread": ["tweet1", "tweet2", ...]}.
