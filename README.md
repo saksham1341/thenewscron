@@ -17,6 +17,19 @@ It fetches fresh articles from external sources, evaluates their potential for e
 
 ---
 
+## 📷 Screenshots
+
+**Aricles**
+![Screenshot 1](screenshots/1.png)
+
+**Threads**
+![Screenshot 2](screenshots/2.png)
+
+**Expanded Thread with Post button**
+![Screenshot 3](screenshots/3.png)
+
+---
+
 ## 📂 Project Structure
 
 ```
